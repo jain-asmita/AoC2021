@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TycheProject xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <TycheProjectFileVersion>2</TycheProjectFileVersion>
+  <TycheVersion>201.0.7.20417</TycheVersion>
+  <IsAuditingEnabled>false</IsAuditingEnabled>
+  <TycheProjectEngineContents>
+    <TycheEngine xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+      <FileVersion>1</FileVersion>
+      <LastLoadedEngineVersion>
+        <BuildNumber>0</BuildNumber>
+        <MajorVersionNumber>0</MajorVersionNumber>
+        <MinorVersionNumber>0</MinorVersionNumber>
+        <PatchNumber>0</PatchNumber>
+      </LastLoadedEngineVersion>
+      <Globals>
+        <ScenarioCount>10000</ScenarioCount>
+        <RandomSeed>749216459</RandomSeed>
+        <UsePerNodeSeeding>true</UsePerNodeSeeding>
+        <AutomaticClearResults>false</AutomaticClearResults>
+        <AutomaticFreeMemory>false</AutomaticFreeMemory>
+        <SparseVectorThreshold>0.01</SparseVectorThreshold>
+        <SIMDGlobalNumThreads>1</SIMDGlobalNumThreads>
+        <ModelDescription></ModelDescription>
+        <ManagedGlobalNumThreads>-1</ManagedGlobalNumThreads>
+        <UseDependencyGroups>true</UseDependencyGroups>
+        <CheckIndexingVariables>false</CheckIndexingVariables>
+        <CheckVariablesAndTypes>false</CheckVariablesAndTypes>
+        <FatalReportLevel>Error</FatalReportLevel>
+        <IssueWarningForExperimentalFeatures>true</IssueWarningForExperimentalFeatures>
+        <CheckDimensionNames>None</CheckDimensionNames>
+        <CheckNonDistributedFunctions>None</CheckNonDistributedFunctions>
+        <ToolkitRequirements>
+          <ToolkitRequirement type="Latest">AdventOfCode</ToolkitRequirement>
+        </ToolkitRequirements>
+        <ModelDeveloper></ModelDeveloper>
+        <ModelReviewer></ModelReviewer>
+        <ModelReviewDate></ModelReviewDate>
+        <ModelNextReviewDate></ModelNextReviewDate>
+      </Globals>
+      <TopLevelModelNodes>
+        <TycheNode xmlns="" i:type="TycheNodeOperation">
+          <fAttachedData i:nil="true" />
+          <NodeType>Operation</NodeType>
+          <Name>Day 13</Name>
+          <Description></Description>
+          <Author>McKinnonLorna</Author>
+          <Text>StochasticInputs = FileReadLines(".\Day 13 Ed.txt");
+
+FindSeparator = MultiColumnIndexOf(ToString(Blank), StochasticInputs);
+Coordinates = ToInteger(ReIndex(StringSplit(StochasticInputs &lt;&lt;Indices(FindSeparator)&gt;&gt;, ","), {"x", "y"}));
+FoldInstructions = 
+    StochasticInputs
+    &lt;&lt;ToStochasticVariable(Skip(SetsComplement(ToDeterministicVariable(Indices(NumScenarios(StochasticInputs))) , ToDeterministicVariable(Indices(FindSeparator))), 1))&gt;&gt;;
+ProcessInstructions = ToDeterministicVariable(StringSplit(StringReplace(FoldInstructions, "fold along ", ""), "="));
+
+FirstFold = 
+If ProcessInstructions[0, 0] == "x" Then 
+Glue(If Coordinates [{"x"}] &gt; ToInteger(ProcessInstructions[1, 0]) Then ToInteger(ProcessInstructions[1, 0]) * 2 - Coordinates [{"x"}] Else Coordinates [{"x"}], Coordinates [{"y"}]) 
+Else 
+Glue(Coordinates [{"x"}], If Coordinates [{"y"}] &gt; ToInteger(ProcessInstructions[1, 0]) Then ToInteger(ProcessInstructions[1, 0]) * 2 - Coordinates [{"y"}] Else Coordinates [{"y"}]) ;
+
+Part1 = Sum(ToInteger(MultiColumnIndexOf(FirstFold, FirstFold) == Indices(NumScenarios(FirstFold))));
+
+Iterative[fold][Length(ProcessInstructions[0])] = 
+If fold == 0 Then FirstFold Else
+If ProcessInstructions[0, fold] == "x" Then 
+    Glue(
+        If Iterative[fold - 1, {0}] &gt; ToInteger(ProcessInstructions[1, fold]) Then 
+            ToInteger(ProcessInstructions[1, fold]) * 2 - Iterative [fold - 1, {0}] 
+        Else Iterative [fold - 1, {0}], Iterative [fold - 1, {1}]) 
+Else 
+Glue(Iterative [fold - 1, {0}], 
+        If Iterative[fold - 1, {1}] &gt; ToInteger(ProcessInstructions[1, fold]) Then 
+            ToInteger(ProcessInstructions[1, fold]) * 2 - Iterative [fold - 1, {1}] 
+        Else  Iterative [fold - 1, {1}]) ;
+
+FinalGrid = Iterative [Length(ProcessInstructions[0]) - 1] - Min[i1](Iterative [Length(ProcessInstructions[0]) - 1]);
+
+SizeOfGrid = Max[i1](FinalGrid);
+out Part2[y][SizeOfGrid[1] + 1] = If MultiColumnIndexOf({Indices(SizeOfGrid [0] + 1), y}, FinalGrid ) != -1 Then "#" Else ToString(Blank);
+
+</Text>
+          <CacheResultValues>true</CacheResultValues>
+          <NumScenariosSourceType>Unspecified</NumScenariosSourceType>
+          <NumScenariosSourceNodeName></NumScenariosSourceNodeName>
+          <NumScenariosSourceVariableName></NumScenariosSourceVariableName>
+          <NumScenariosDefault>0</NumScenariosDefault>
+          <IsUserDefinedFunctionContents>false</IsUserDefinedFunctionContents>
+          <Breakpoints />
+          <NestedSettings xmlns="" i:type="TycheSettingsContainer">
+            <InputVariables />
+            <OutputVariables />
+            <IsContainer>false</IsContainer>
+            <RandomSeed>1535424799</RandomSeed>
+          </NestedSettings>
+          <Children />
+          <ChildrenEdges />
+        </TycheNode>
+        <TycheNode xmlns="" i:type="TycheNodeOperation">
+          <fAttachedData i:nil="true" />
+          <NodeType>Operation</NodeType>
+          <Name>Day 13 Testing</Name>
+          <Description></Description>
+          <Author>McKinnonLorna</Author>
+          <Text>StochasticInputs = FileReadLines(".\Day 13 Ed.txt");
+FindSeparator = MultiColumnIndexOf(ToString(Blank), StochasticInputs);
+Coordinates = ToInteger(ReIndex(StringSplit(StochasticInputs &lt;&lt;Indices(FindSeparator)&gt;&gt;, ","), {"x", "y"}));
+FoldInstructions = 
+    StochasticInputs&lt;&lt;ToStochasticVariable(Skip(SetsComplement(ToDeterministicVariable(Indices(NumScenarios(StochasticInputs))) , ToDeterministicVariable(Indices(FindSeparator))), 1))&gt;&gt;;
+ProcessInstructions = ToDeterministicVariable(StringSplit(StringReplace(FoldInstructions, "fold along ", ""), "="));
+
+CoordDims[Coord][IteratorSize(Coordinates)] = {{0, 1}, {1, 0}};
+FirstFold = ReIndex(
+{If Coordinates[ProcessInstructions[0, 0]] &gt; ToInteger(ProcessInstructions[1, 0]) Then ToInteger(ProcessInstructions[1, 0]) * 2 - Coordinates Else Coordinates, 
+Coordinates}[CoordDims[ProcessInstructions[0, 0]], {"x", "y"}], {"x", "y"});
+
+Part1 = Sum(BoolToInt(MultiColumnIndexOf(FirstFold, FirstFold) == Indices(NumScenarios(FirstFold))));
+
+Iterative[fold][Length(ProcessInstructions[0])] = 
+If fold == 0 Then FirstFold Else
+        ReIndex({If Iterative[fold - 1, ProcessInstructions[0, fold]] &gt; ToInteger(ProcessInstructions[1, fold]) Then 
+            ToInteger(ProcessInstructions[1, fold]) * 2 - Iterative[fold - 1] 
+         Else Iterative[fold - 1], Iterative[fold - 1]}[CoordDims[ProcessInstructions[0, fold]], {"x", "y"}], {"x", "y"});
+
+FinalGrid = Iterative [Length(ProcessInstructions[0]) - 1] - Min[i2](Iterative [Length(ProcessInstructions[0]) - 1]);
+SizeOfGrid = Max[i2](FinalGrid);
+
+//Part2[y][SizeOfGrid[1] + 1] = If MultiColumnIndexOf({Indices(SizeOfGrid [0] + 1), y}, FinalGrid ) != -1 Then "#" Else ToString(Blank);
+
+//Part2[y][SizeOfGrid[1] + 1] = Replace(MultiColumnIndexOf({Indices(SizeOfGrid [0] + 1), y}, FinalGrid ), -1, Blank);
+
+Part2[y][SizeOfGrid[1] + 1] = y * (SizeOfGrid[0] + 1) + Indices(SizeOfGrid [0] + 1);
+
+/*
+Iterative2[fold][Length(ProcessInstructions[0])] = 
+If fold == 0 Then FirstFold Else
+        ReIndex({If Iterative2[fold - 1, ProcessInstructions[0, fold], Default :: Coordinates[ProcessInstructions[0, 0]]] &gt; ToInteger(ProcessInstructions[1, fold]) Then 
+            ToInteger(ProcessInstructions[1, fold]) * 2 - Iterative2[fold - 1, Default :: Coordinates] 
+         Else Iterative2[fold - 1, Default :: Coordinates], Iterative2[fold - 1, Default :: Coordinates]}[CoordDims[ProcessInstructions[0, fold]], {"x", "y"}], {"x", "y"});
+*/</Text>
+          <CacheResultValues>true</CacheResultValues>
+          <NumScenariosSourceType>Unspecified</NumScenariosSourceType>
+          <NumScenariosSourceNodeName></NumScenariosSourceNodeName>
+          <NumScenariosSourceVariableName></NumScenariosSourceVariableName>
+          <NumScenariosDefault>0</NumScenariosDefault>
+          <IsUserDefinedFunctionContents>false</IsUserDefinedFunctionContents>
+          <Breakpoints />
+          <NestedSettings xmlns="" i:type="TycheSettingsContainer">
+            <InputVariables />
+            <OutputVariables />
+            <IsContainer>false</IsContainer>
+            <RandomSeed>1535424799</RandomSeed>
+          </NestedSettings>
+          <Children />
+          <ChildrenEdges />
+        </TycheNode>
+      </TopLevelModelNodes>
+      <TopLevelModelEdges />
+    </TycheEngine>
+  </TycheProjectEngineContents>
+  <TycheProjectGUIContents>
+    <TycheModel xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+      <FileVersion>1</FileVersion>
+      <TopLevelGuiNodes>
+        <TycheGuiNode>
+          <Name>Day 13</Name>
+          <ElementLeft>243</ElementLeft>
+          <ElementTop>65</ElementTop>
+          <ElementWidth>250</ElementWidth>
+          <ElementHeight>90</ElementHeight>
+          <Children />
+          <VisualNodeSettings>
+            <ShowIcon>true</ShowIcon>
+            <ShowTitle>true</ShowTitle>
+            <ShowBorder>true</ShowBorder>
+            <ShowBackground>true</ShowBackground>
+            <IconString></IconString>
+            <TitleLocation>Embed</TitleLocation>
+            <TitleColourString>#FF000000</TitleColourString>
+            <BackgroundColour1String>#FFFAFBE9</BackgroundColour1String>
+            <BackgroundColour2String>#FFFFD700</BackgroundColour2String>
+            <BorderColourString>#FF800080</BorderColourString>
+            <IsIconStandardSize>true</IsIconStandardSize>
+            <FloatingTitleBackgroundColourString>#FFFFFFFF</FloatingTitleBackgroundColourString>
+            <FloatingTitleBorderColourString>#FF800080</FloatingTitleBorderColourString>
+            <FloatingTitleOffsetX>0</FloatingTitleOffsetX>
+            <FloatingTitleOffsetY>0</FloatingTitleOffsetY>
+            <FloatingTitleWidth>120</FloatingTitleWidth>
+            <FloatingTitleHeight>40</FloatingTitleHeight>
+          </VisualNodeSettings>
+          <OutliningStatus />
+          <IsBackwardsNode>false</IsBackwardsNode>
+          <ExcludeFromModelInspection>false</ExcludeFromModelInspection>
+        </TycheGuiNode>
+        <TycheGuiNode>
+          <Name>Day 13 Testing</Name>
+          <ElementLeft>302</ElementLeft>
+          <ElementTop>197</ElementTop>
+          <ElementWidth>250</ElementWidth>
+          <ElementHeight>90</ElementHeight>
+          <Children />
+          <VisualNodeSettings>
+            <ShowIcon>true</ShowIcon>
+            <ShowTitle>true</ShowTitle>
+            <ShowBorder>true</ShowBorder>
+            <ShowBackground>true</ShowBackground>
+            <IconString></IconString>
+            <TitleLocation>Embed</TitleLocation>
+            <TitleColourString>#FF000000</TitleColourString>
+            <BackgroundColour1String>#FFFAFBE9</BackgroundColour1String>
+            <BackgroundColour2String>#FFFFD700</BackgroundColour2String>
+            <BorderColourString>#FF800080</BorderColourString>
+            <IsIconStandardSize>true</IsIconStandardSize>
+            <FloatingTitleBackgroundColourString>#FFFFFFFF</FloatingTitleBackgroundColourString>
+            <FloatingTitleBorderColourString>#FF800080</FloatingTitleBorderColourString>
+            <FloatingTitleOffsetX>0</FloatingTitleOffsetX>
+            <FloatingTitleOffsetY>0</FloatingTitleOffsetY>
+            <FloatingTitleWidth>120</FloatingTitleWidth>
+            <FloatingTitleHeight>40</FloatingTitleHeight>
+          </VisualNodeSettings>
+          <OutliningStatus />
+          <IsBackwardsNode>false</IsBackwardsNode>
+          <ExcludeFromModelInspection>false</ExcludeFromModelInspection>
+        </TycheGuiNode>
+      </TopLevelGuiNodes>
+      <DebuggingSettings>
+        <BreakOnError>true</BreakOnError>
+        <BreakOnWarning>false</BreakOnWarning>
+        <BreakOnMessage>false</BreakOnMessage>
+      </DebuggingSettings>
+      <DefaultGridCellFormat i:nil="true" />
+      <ModelInspectionSettings viewGlobalProperties="True" viewDescriptionProperties="True" viewTSharpProperties="True" viewGeneralProperties="True" viewInputVariables="True" viewOutputVariables="True" viewNodesWithTSharp="True" viewNodesWithoutTSharp="True" />
+    </TycheModel>
+  </TycheProjectGUIContents>
+</TycheProject>

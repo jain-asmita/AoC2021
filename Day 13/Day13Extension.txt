@@ -1,0 +1,166 @@
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.ArrayList;
+
+public class Day13
+{
+    public static void main(String[] args)
+	{
+	    String allInput = StdIn.readAll();
+		long startTime = System.nanoTime();
+		String[] input_byLine = allInput.split("\r\n");
+		int nLines = input_byLine.length;
+		
+		HashSet<HashMap<String, Integer>> points = new HashSet<HashMap<String, Integer>>();
+		ArrayList<String> directionList = new ArrayList<String>();
+		ArrayList<Integer> foldCoordinateList = new ArrayList<Integer>();
+		
+		for(int line = 0; line < nLines; ++line)
+		{
+		    if(input_byLine[line].contains("fold"))
+			{
+			    String direction = input_byLine[line].substring(11, 12);
+				int coordinate = Integer.parseInt(input_byLine[line].split("=")[1]);
+				directionList.add(direction);
+                foldCoordinateList.add(coordinate);
+			}
+			else
+			{
+			    String[] lineSplit = input_byLine[line].split(",");
+				int x = Integer.parseInt(lineSplit[0]);
+				int y = Integer.parseInt(lineSplit[1]);
+				
+				HashMap<String, Integer> point = new HashMap<String, Integer>();
+				point.put("x", x);
+				point.put("y", y);
+				points.add(point);
+			}
+		}
+		
+		int xMax = findMax(points, "x");
+		int yMax = findMax(points, "y");
+		
+		int[][] grid = new int[xMax + 1][yMax + 1];
+		
+		for(HashMap<String, Integer> point: points)
+		{
+			grid[point.get("x")][point.get("y")] = 1;
+		}
+		
+		
+		int nInstructions = directionList.size();
+		for(int i = 0; i < nInstructions; ++i)
+		{
+			int yLength = grid[0].length;
+			int xLength = grid.length;
+			
+			if(directionList.get(i).equals("x"))
+			{
+				int[][] newGrid = createNewGridXFold(grid, xLength, yLength, foldCoordinateList.get(i));
+				grid = newGrid;
+			}
+			else
+			{
+				int[][] newGrid = createNewGridYFold(grid, xLength, yLength, foldCoordinateList.get(i));
+				grid = newGrid;
+			}
+			
+		}
+		
+		printArray(grid);
+		
+		long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        System.out.println(totalTime * Math.pow(10, -9));
+
+	}
+	
+	public static void printArray(int[][] array)
+	{
+		for(int y = 0; y < array[0].length; ++y)
+		{
+			for(int x = 0; x < array.length; ++x)
+			{
+				StdOut.print(array[x][y] > 0 ? "#" : ".");
+			}
+			StdOut.println("");
+		}
+	}
+	
+	
+	
+    public static int countPoints(int[][] grid)
+	{
+		int nPoints = 0;
+		for(int x = 0; x < grid.length; ++x)
+		{
+			for(int y = 0; y < grid[9].length; ++y)
+			{
+				if(grid[x][y] > 0)
+				{
+					nPoints++;
+				}
+			}
+		}
+		return nPoints;
+	}
+	
+	public static int[][] createNewGridXFold(int[][] grid, int xLength, int yLength, int foldCoordinate)
+	{
+		int newXlength = Math.max(foldCoordinate, xLength - foldCoordinate - 1);
+		int[][] newGrid = new int[newXlength][yLength];
+		for(int x = newXlength - foldCoordinate; x < newXlength; ++x)
+		{
+			for(int y = 0; y < yLength; ++y)
+			{
+				newGrid[x][y] = grid[x][y];
+			}
+		}
+		
+		for(int x = foldCoordinate + 1; x < xLength; ++x)
+		{
+			for(int y = 0; y < yLength; ++y)
+			{
+				newGrid[xLength - x - 1][y] += grid[x][y];
+			}
+		}
+		
+		return newGrid;
+	}
+	
+	public static int[][] createNewGridYFold(int[][] grid, int xLength, int yLength, int foldCoordinate)
+	{
+		int newYlength = Math.max(foldCoordinate, yLength - foldCoordinate - 1);
+		int[][] newGrid = new int[xLength][newYlength];
+		for(int y = newYlength - foldCoordinate; y < newYlength; ++y)
+		{
+			for(int x = 0; x < xLength; ++x)
+			{
+				newGrid[x][y] = grid[x][y];
+			}
+		}
+		
+		for(int y = foldCoordinate + 1; y < yLength; ++y)
+		{
+			for(int x = 0; x < xLength; ++x)
+			{
+				newGrid[x][yLength - y - 1] += grid[x][y];
+			}
+		}
+		
+		return newGrid;
+	}
+	
+	public static int findMax(HashSet<HashMap<String, Integer>> points, String direction)
+	{
+		int maxValue = 0;
+		for(HashMap<String, Integer> point: points)
+		{
+			if(point.get(direction) > maxValue)
+			{
+				maxValue = point.get(direction);
+			}
+		}
+		return maxValue;
+	}
+}

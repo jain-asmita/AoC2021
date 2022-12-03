@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ToolkitManifest ManifestVersion="1">
+  <Name>Local C:\Users\JainAsmita\Downloads\Day 13.tproj</Name>
+  <Version>0.0.0.0</Version>
+  <Author />
+  <ReleaseState>Development</ReleaseState>
+  <RequireFullyQualifiedNames>False</RequireFullyQualifiedNames>
+  <Dependencies />
+  <Items>
+    <Item>
+      <Name>BoolToInt</Name>
+      <Category />
+      <Type>UserDefinedFunction</Type>
+      <DefinitionLocation>BoolToInt.tkit</DefinitionLocation>
+    </Item>
+  </Items>
+</ToolkitManifest>

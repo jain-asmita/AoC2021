@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TycheNode xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="" i:type="TycheNodeOperation">
+  <fAttachedData i:nil="true" />
+  <NodeType>Operation</NodeType>
+  <Name>BoolToInt</Name>
+  <Description></Description>
+  <Author>JainAsmita</Author>
+  <Text>arg bool = 1;
+
+out int = bool ? 1 : 0;</Text>
+  <CacheResultValues>true</CacheResultValues>
+  <NumScenariosSourceType>Unspecified</NumScenariosSourceType>
+  <NumScenariosSourceNodeName></NumScenariosSourceNodeName>
+  <NumScenariosSourceVariableName></NumScenariosSourceVariableName>
+  <NumScenariosDefault>0</NumScenariosDefault>
+  <IsUserDefinedFunctionContents>false</IsUserDefinedFunctionContents>
+  <Breakpoints />
+  <NestedSettings xmlns="" i:type="TycheSettingsContainer">
+    <InputVariables />
+    <OutputVariables />
+    <IsContainer>false</IsContainer>
+    <RandomSeed>1535424799</RandomSeed>
+  </NestedSettings>
+  <Children />
+  <ChildrenEdges />
+</TycheNode>
